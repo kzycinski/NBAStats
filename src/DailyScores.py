@@ -2,6 +2,7 @@ import datetime
 import json
 from pprint import pprint
 import requests
+import matplotlib.pyplot as plt
 
 
 class DailyScores:
@@ -9,8 +10,11 @@ class DailyScores:
         web_source = requests.get(
             "http://data.nba.com/data/10s/prod/v1/{}{:02d}{:02d}/scoreboard.json".format(date.year, date.month,
                                                                                          date.day))
-        data = json.loads(web_source.content)
-        self.games = data['games']
+        try:
+            data = json.loads(web_source.content)
+            self.games = data['games']
+        except json.decoder.JSONDecodeError:
+            raise AttributeError("There is not any games information at this date ):\n")
 
     def get_scores(self):
         result = []
@@ -20,7 +24,27 @@ class DailyScores:
             result.append(tmp)
         return result
 
+    def show_scores(self):
+        scores = self.get_scores()
+        names = []
+        points = []
+        for item in scores:
+            names.append((item['hTeamTriCode'], item['vTeamTriCode']))
+            points.append((int(item['hTeamScore']), int(item['vTeamScore'])))
 
-date = datetime.date(2018, 1, 1)
-a = DailyScores(date).get_scores()
-pprint(a)
+        plt.figure(1, figsize=(3 * len(names), len(names)))
+        plt.ylabel("Score")
+
+        for i in range(len(names)):
+            subplot = 100 + len(names) * 10 + i + 1
+
+            ymin = min(points[i]) - 10
+            ymax = max(points[i]) + 10
+
+            plt.subplot(subplot)
+            plt.ylim(ymin, ymax)
+            plt.yticks(points[i])
+            plt.bar(names[i], points[i])
+
+        plt.show()
+
