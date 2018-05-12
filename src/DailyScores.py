@@ -4,17 +4,13 @@ from pprint import pprint
 import requests
 import matplotlib.pyplot as plt
 
+from src.ServerConnection import ServerConnection
+
 
 class DailyScores:
-    def __init__(self, date):
-        web_source = requests.get(
-            "http://data.nba.com/data/10s/prod/v1/{}{:02d}{:02d}/scoreboard.json".format(date.year, date.month,
-                                                                                         date.day))
-        try:
-            data = json.loads(web_source.content)
-            self.games = data['games']
-        except json.decoder.JSONDecodeError:
-            raise AttributeError("There is not any games information at this date ):\n")
+    def __init__(self, server_name, date):
+        self.server = ServerConnection(server_name, date)
+        self.games = self.server.get_daily_scores()
 
     def get_scores(self):
         result = []
@@ -47,4 +43,3 @@ class DailyScores:
             plt.bar(names[i], points[i])
 
         plt.show()
-
