@@ -4,13 +4,16 @@ from pprint import pprint
 import requests
 import matplotlib.pyplot as plt
 
+from src.IShow import IShow
 from src.ServerConnection import ServerConnection
 
 
-class DailyScores:
+class DailyScores(IShow):
     def __init__(self, server_name, date):
         self.server = ServerConnection(server_name, date)
         self.games = self.server.get_daily_scores()
+        if not self.games:
+            raise AttributeError("Wrong date\n")
 
     def get_scores(self):
         result = []
@@ -20,8 +23,7 @@ class DailyScores:
             result.append(tmp)
         return result
 
-    def show_scores(self):
-        scores = self.get_scores()
+    def show(self, scores):
         names = []
         points = []
         for item in scores:
@@ -30,16 +32,19 @@ class DailyScores:
 
         plt.figure(1, figsize=(3 * len(names), len(names)))
         plt.ylabel("Score")
-
         for i in range(len(names)):
-            subplot = 100 + len(names) * 10 + i + 1
-
             ymin = min(points[i]) - 10
             ymax = max(points[i]) + 10
 
-            plt.subplot(subplot)
+            subplot_a = 1 if len(names) < 10 else 2
+            subplot_b = len(names) if len(names) < 10 else int(len(names) / 2)
+            subplot_c = i + 1
+
+            plt.subplot(subplot_a, subplot_b, subplot_c)
             plt.ylim(ymin, ymax)
             plt.yticks(points[i])
             plt.bar(names[i], points[i])
 
+
         plt.show()
+
