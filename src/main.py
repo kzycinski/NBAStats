@@ -19,5 +19,5 @@ c = ServerConnection(server_name, date)
 except TypeError:
     print("xd")
 """
-pprint(c.get_players())
 
+pprint(c.get_players_list())
