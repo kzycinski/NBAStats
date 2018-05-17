@@ -9,11 +9,8 @@ from src.ServerConnection import ServerConnection
 
 
 class DailyScores(IShow):
-    def __init__(self, server_name, date):
-        self.server = ServerConnection(server_name, date)
-        self.games = self.server.get_daily_scores()
-        if not self.games:
-            raise AttributeError("Wrong date\n")
+    def __init__(self, server):
+        self.games = server.get_daily_scores()
 
     def get_scores(self):
         result = []
@@ -45,6 +42,4 @@ class DailyScores(IShow):
             plt.yticks(points[i])
             plt.bar(names[i], points[i])
 
-
         plt.show()
-

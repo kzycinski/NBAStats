@@ -6,11 +6,9 @@ from src.ServerConnection import ServerConnection
 
 
 class NBATeams:
-    def __init__(self, server_name, date):
-        self.server = ServerConnection(server_name, date)
-        self.teams = self.server.get_teams()
-        if not self.teams:
-            raise AttributeError("Wrong date\n")
+    def __init__(self, server):
+        self.teams = server.get_teams()
+
 
     def get_team(self, name):
         if type(name) is int:

@@ -57,3 +57,13 @@ class ServerConnection:
     def get_eastern_standings(self):
         tmp = self.get_conference_standings()
         return tmp['league']['standard']['conference']['east'] if tmp else None
+
+    def get_players(self):
+        web_source = requests.get(self.server_name + "/{}/players.json".format(self.date.year))
+
+        try:
+            data = json.loads(web_source.content)
+            return data['league']['standard']
+        except json.decoder.JSONDecodeError:
+            return None
+            #TODO

@@ -8,14 +8,13 @@ import matplotlib.pyplot as plt
 
 
 class Standings(IShow):
-    def __init__(self, server_name, date):
-        self.server = ServerConnection(server_name, date)
-        self.server_name = server_name
-        self.date = date
+    def __init__(self, server):
+        self.server = server
+
 
     def get_standings(self, standings):
         result = []
-        teams = NBATeams(self.server_name, self.date)
+        teams = NBATeams(self.server)
         for item in standings:
             tmp = dict([('win', item['win']), ('tricode', teams.get_team_tricode_from_id(int(item['teamId']))),
                         ('loss', item['loss'])])
@@ -55,6 +54,8 @@ class Standings(IShow):
         plt.figure(2)
 
         plt.ylim(y_min, y_max)
+        for a, b in zip(names, loses):
+            plt.text(a, b, str(b), color='blue', fontweight='bold', ha = 'center')
         plt.bar(names, loses)
 
         plt.show()
