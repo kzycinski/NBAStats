@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
-from src.NBATeams import NBATeams
-from src.IShow import IShow
-from src.Player import Player
-from src.ServerConnection import ServerConnection
+from NBATeams import NBATeams
+from IShow import IShow
+from Player import Player
+from ServerConnection import ServerConnection
 
 
 class PlayersManagement(IShow):
@@ -17,10 +17,11 @@ class PlayersManagement(IShow):
                 player_id = player['personId']
         if not player_id:
             return None
-        player_info = self.server.get_player_stats(id)
+            # todo
+        player_info = self.server.get_player_stats(player_id)
         pi = player_info['stats']['latest']
         teams = NBATeams(self.server)
-        return Player(name, surname, teams.get_team_tricode_from_id(player_info['teamId']), pi['ppg'], pi['rpg'],
+        return Player(name, surname, teams.get_team_tricode_from_id(int(player_info['teamId'])), pi['ppg'], pi['rpg'],
                       pi['apg'], pi['mpg'], pi['spg'], pi['bpg'])
 
     def show(self, players):
@@ -32,13 +33,14 @@ class PlayersManagement(IShow):
         spg = []
         bpg = []
         for item in players:
-            names.append(item['Name'])
-            ppg.append(item['PPG'])
-            rpg.append(item['RPG'])
-            apg.append(item['APG'])
-            mpg.append(item['MPG'])
-            spg.append(item['SPG'])
-            bpg.append(item['BPG'])
+            tmp = '{}\n{}'.format(item['Name'], item['Team'])
+            names.append(tmp)
+            ppg.append(float(item['PPG']))
+            rpg.append(float(item['RPG']))
+            apg.append(float(item['APG']))
+            mpg.append(float(item['MPG']))
+            spg.append(float(item['SPG']))
+            bpg.append(float(item['BPG']))
 
         plt.figure(1)
 

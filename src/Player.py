@@ -1,4 +1,4 @@
-from src.IShow import IShow
+from IShow import IShow
 
 
 class Player():
@@ -14,9 +14,12 @@ class Player():
         self.bpg = bpg
 
     def get_stats(self):
-        return dict([('Name', self.first_name + " " + self.last_name), ('PPG', self.ppg), ('RPG', self.rpg),
-                     ('APG', self.apg), ('MPG', self.mpg), ('SPG', self.spg),
-                     ('BPG', self.bpg)])
+        tmp = []
+        tmp.append(dict([('Name', self.first_name + " " + self.last_name), ('Team', self.team), ('PPG', self.ppg),
+                         ('RPG', self.rpg),
+                         ('APG', self.apg), ('MPG', self.mpg), ('SPG', self.spg),
+                         ('BPG', self.bpg)]))
+        return tmp
 
     def get_name(self):
         return self.first_name + " " + self.last_name

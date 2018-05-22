@@ -1,16 +1,15 @@
 import datetime
 from pprint import pprint
 
-from src.IShow import IShow
-from src.NBATeams import NBATeams
-from src.ServerConnection import ServerConnection
+from IShow import IShow
+from NBATeams import NBATeams
+from ServerConnection import ServerConnection
 import matplotlib.pyplot as plt
 
 
 class Standings(IShow):
     def __init__(self, server):
         self.server = server
-
 
     def get_standings(self, standings):
         result = []
@@ -48,14 +47,14 @@ class Standings(IShow):
 
         plt.ylim(y_min, y_max)
         for a, b in zip(names, wins):
-            plt.text(a, b, str(b), color='blue', fontweight='bold', ha = 'center')
+            plt.text(a, b, str(b), color='blue', fontweight='bold', ha='center')
         plt.bar(names, wins)
 
         plt.figure(2)
 
         plt.ylim(y_min, y_max)
         for a, b in zip(names, loses):
-            plt.text(a, b, str(b), color='blue', fontweight='bold', ha = 'center')
+            plt.text(a, b, str(b), color='blue', fontweight='bold', ha='center')
         plt.bar(names, loses)
 
         plt.show()

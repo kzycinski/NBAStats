@@ -2,7 +2,7 @@ import json
 import requests
 from pprint import pprint
 
-from src.ServerConnection import ServerConnection
+from ServerConnection import ServerConnection
 
 
 class NBATeams:

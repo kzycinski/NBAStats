@@ -4,8 +4,8 @@ from pprint import pprint
 import requests
 import matplotlib.pyplot as plt
 
-from src.IShow import IShow
-from src.ServerConnection import ServerConnection
+from IShow import IShow
+from ServerConnection import ServerConnection
 
 
 class DailyScores(IShow):
