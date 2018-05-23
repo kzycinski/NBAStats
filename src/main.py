@@ -269,6 +269,10 @@ def compare_players():
             msg = "Cannot connect to the server"
             print_middle(msg)
             stdscr.getch()
+        except KeyError:
+            msg = "Wrong Mode"
+            print_middle(msg)
+            stdscr.getch()
 
 
 def set_data():
