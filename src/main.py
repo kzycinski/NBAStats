@@ -1,14 +1,13 @@
 import datetime
 import curses
-import json
-import requests
-from pprint import pprint
-import matplotlib.pyplot as plt
+import signal
+import threading
 
 from ServerConnection import ServerConnection
 from DailyScores import DailyScores
-
+from PlayersManagement import PlayersManagement
 from NoDataFoundError import NoDataFoundError
+from Standings import Standings
 
 server_name = "http://data.nba.net/data/10s/prod/v1"
 today_date = datetime.date.today()
@@ -16,6 +15,8 @@ date = None
 cursor_x = 0
 cursor_y = 0
 height, width = 0, 0
+t1 = None
+t2 = None
 
 
 def print_title(start_y, start_x, title):
@@ -34,10 +35,12 @@ def print_middle(msg):
 
     stdscr.clear()
     height, width = stdscr.getmaxyx()
+
     start_x = int((width // 2) - (len(msg) // 2) - len(msg) % 2)
     start_y = int((height // 2) - 2)
     stdscr.clear()
     stdscr.refresh()
+
     stdscr.addstr(start_y, start_x, msg)
 
 
@@ -75,6 +78,12 @@ def print_info():
     stdscr.getch()
 
 
+def signal_handler(signal, frame):
+    stdscr.clear()
+    stdscr.refresh()
+    exit(0)
+
+
 def game_scores():
     if date is None:
         set_data()
@@ -91,15 +100,179 @@ def game_scores():
         stdscr.getch()
 
 
-
 def standings():
     if date is None:
         set_data()
+    while True:
+        stdscr.clear()
+        stdscr.refresh()
+
+        title = "STANDINGS"
+        all_st = "1. All standings"
+        western = "2. Western conference standings"
+        eastern = "3. Eastern conference standings"
+        back = "4. Back"
+        enter_message = "Enter your choice: "
+
+        stdscr.clear()
+        stdscr.refresh()
+
+        to_print = []
+        to_print.extend((all_st, western, eastern, back, enter_message))
+
+        start_x = 5
+
+        start_y = 2
+
+        print_title(start_y, start_x, title)
+
+        for item in to_print:
+            start_y += 2
+            stdscr.addstr(start_y, start_x, item)
+
+        curses.echo()
+
+        stdscr.move(start_y, start_x + len(enter_message))
+
+        tmp = stdscr.getstr(start_y, start_x + len(enter_message), 1)
+
+        option = int(tmp.decode("utf-8"))
+
+        if option == 4:
+            return
+        elif option != 3 and option != 2 and option != 1:
+            wrong_oprion()
+            continue
+        try:
+            standings_var = Standings(server)
+            if option == 1:
+                standings_buff = standings_var.get_all_standings()
+            elif option == 2:
+                standings_buff = standings_var.get_western_standings()
+            elif option == 3:
+                standings_buff = standings_var.get_eastern_standings()
+
+            standings_var.show(standings_buff)
+            break
+        except NoDataFoundError:
+            msg = "No standings information on given date, please change date and try again."
+            print_middle(msg)
+            stdscr.getch()
+        except ConnectionError:
+            msg = "Cannot connect to the server"
+            print_middle(msg)
+            stdscr.getch()
+        return
 
 
 def compare_players():
     if date is None:
         set_data()
+
+    while True:
+        stdscr.clear()
+        stdscr.refresh()
+
+        title = "COMPARE PLAYERS"
+        season = "1. Compare season stats"
+        career = "2. Compare career stats"
+        back = "3. Back"
+        enter_message = "Enter your choice: "
+
+        stdscr.clear()
+        stdscr.refresh()
+
+        to_print = []
+        to_print.extend((season, career, back, enter_message))
+
+        start_x = 5
+
+        start_y = 2
+
+        print_title(start_y, start_x, title)
+
+        for item in to_print:
+            start_y += 2
+            stdscr.addstr(start_y, start_x, item)
+
+        curses.echo()
+
+        stdscr.move(start_y, start_x + len(enter_message))
+
+        tmp = stdscr.getstr(start_y, start_x + len(enter_message), 1)
+
+        option = int(tmp.decode("utf-8"))
+
+        if option == 3:
+            return
+        elif option != 2 and option != 1:
+            wrong_oprion()
+            continue
+
+        curses.start_color()
+        curses.init_pair(2, curses.COLOR_CYAN, curses.COLOR_BLACK)
+
+        stdscr.clear()
+        height, width = stdscr.getmaxyx()
+        stdscr.clear()
+        stdscr.refresh()
+        msg = "Enter player 1 first name:"
+        start_x = int((width // 2) - (len(msg) // 2) - len(msg) % 2)
+        start_y = int((height // 2) - 2)
+        stdscr.addstr(start_y, start_x, msg)
+
+        tmp = stdscr.getstr(start_y, start_x + len(msg), 20)
+        name_1 = tmp.decode("utf-8")
+
+        stdscr.clear()
+        stdscr.refresh()
+        msg = "Enter player 1 last name:"
+        start_x = int((width // 2) - (len(msg) // 2) - len(msg) % 2)
+        start_y = int((height // 2) - 2)
+        stdscr.addstr(start_y, start_x, msg)
+
+        tmp = stdscr.getstr(start_y, start_x + len(msg), 20)
+        surname_1 = tmp.decode("utf-8")
+
+        stdscr.clear()
+        stdscr.refresh()
+        msg = "Enter player 2 first name:"
+        start_x = int((width // 2) - (len(msg) // 2) - len(msg) % 2)
+        start_y = int((height // 2) - 2)
+        stdscr.addstr(start_y, start_x, msg)
+
+        tmp = stdscr.getstr(start_y, start_x + len(msg), 20)
+        name_2 = tmp.decode("utf-8")
+
+        stdscr.clear()
+        stdscr.refresh()
+        msg = "Enter player 2 last name:"
+        start_x = int((width // 2) - (len(msg) // 2) - len(msg) % 2)
+        start_y = int((height // 2) - 2)
+        stdscr.addstr(start_y, start_x, msg)
+
+        tmp = stdscr.getstr(start_y, start_x + len(msg), 20)
+        surname_2 = tmp.decode("utf-8")
+
+        if option == 1:
+            mode = 'latest'
+        elif option == 2:
+            mode = 'careerSummary'
+
+        try:
+            players_mgmt = PlayersManagement(server)
+            player_1 = players_mgmt.get_player(name_1, surname_1, mode).get_stats()
+            player_2 = players_mgmt.get_player(name_2, surname_2, mode).get_stats()
+            players_mgmt.show(player_1 + player_2)
+            break
+        except NoDataFoundError:
+            msg = "No scores information on name and data, please change data and try again."
+            print_middle(msg)
+            stdscr.getch()
+        except ConnectionError:
+            msg = "Cannot connect to the server"
+            print_middle(msg)
+            stdscr.getch()
 
 
 def set_data():
@@ -193,8 +366,6 @@ def set_data():
         break
 
 
-
-
 def wrong_oprion():
     msg = "Wrong option ):"
     print_middle(msg)
@@ -211,6 +382,9 @@ def switcher(option):
     elif option == '4':
         set_data()
     elif option == '5':
+
+        stdscr.clear()
+        stdscr.refresh()
         exit(0)
     else:
         wrong_oprion()
@@ -258,7 +432,9 @@ def main_menu():
 
 
 def main():
+    signal.signal(signal.SIGINT, signal_handler)
     global stdscr
+
     stdscr = curses.initscr()
     height, width = stdscr.getmaxyx()
 
@@ -270,6 +446,26 @@ def main():
 
     stdscr.clear()
     stdscr.refresh()
+    """
+    xd = datetime.date(2017,12,12)
+    xdd = ServerConnection(server_name, xd)
+    mode = 'latest'
+    try:
+        players_mgmt = PlayersManagement(xdd)
+        #player_1 = players_mgmt.get_player(name_1, surname_1, mode)
+        player_1 = players_mgmt.get_player("Kevin", "Durant", mode).get_stats()
+        player_2 = players_mgmt.get_player("Russell", "Westbrook", mode).get_stats()
+        pprint(player_2)
+
+        #player_2 = players_mgmt.get_player(name_2, surname_2, mode)
+        players_mgmt.show(player_1+player_2)
+
+    except NoDataFoundError:
+        msg = "No scores information on name and data, please change data and try again."
+        print("xd")
+    except ConnectionError:
+        msg = "Cannot connect to the server"
+        print("xdd")"""
 
 
 if __name__ == '__main__':

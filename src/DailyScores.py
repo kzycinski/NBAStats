@@ -1,16 +1,14 @@
-import datetime
-import json
-from pprint import pprint
-import requests
+import threading
+
 import matplotlib.pyplot as plt
 
 from IShow import IShow
-from ServerConnection import ServerConnection
 
 
 class DailyScores(IShow):
     def __init__(self, server):
         self.games = server.get_daily_scores()
+        self.date = server.get_date()
 
     def get_scores(self):
         result = []
@@ -27,8 +25,13 @@ class DailyScores(IShow):
             names.append((item['hTeamTriCode'], item['vTeamTriCode']))
             points.append((int(item['hTeamScore']), int(item['vTeamScore'])))
 
-        plt.figure(1, figsize=(3 * len(names), len(names)))
-        plt.ylabel("Score")
+        fig = plt.figure(1, figsize=(3 * len(names), len(names)))
+        fig.suptitle('Daily scores - {}.{}.{}'.format(self.date.day, self.date.month, self.date.year),
+                     fontsize=14, fontweight='bold')
+
+        fig.text(0.5, 0.04, 'Teams', fontsize=14, ha='center', va='center')
+        fig.text(0.06, 0.5, 'Points', fontsize=14, ha='center', va='center', rotation='vertical')
+
         for i in range(len(names)):
             ymin = min(points[i]) - 10
             ymax = max(points[i]) + 10
@@ -38,8 +41,10 @@ class DailyScores(IShow):
             subplot_c = i + 1
 
             plt.subplot(subplot_a, subplot_b, subplot_c)
+
             plt.ylim(ymin, ymax)
             plt.yticks(points[i])
+
             plt.bar(names[i], points[i])
 
         plt.show()

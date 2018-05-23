@@ -1,7 +1,4 @@
-import datetime
 import json
-from pprint import pprint
-
 import requests
 from NoDataFoundError import NoDataFoundError
 
@@ -101,3 +98,6 @@ class ServerConnection():
             return data['league']['standard']
         except json.decoder.JSONDecodeError:
             raise NoDataFoundError
+
+    def get_date(self):
+        return self.date

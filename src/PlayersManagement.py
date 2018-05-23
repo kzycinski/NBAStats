@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from NBATeams import NBATeams
 from IShow import IShow
 from Player import Player
-from ServerConnection import ServerConnection
+from NoDataFoundError import NoDataFoundError
 
 
 class PlayersManagement(IShow):
@@ -10,16 +10,15 @@ class PlayersManagement(IShow):
         self.server = server
         self.players_list = server.get_players_list()
 
-    def get_player(self, name, surname):
+    def get_player(self, name, surname, mode):
         player_id = None
         for player in self.players_list:
             if player['firstName'] == name and player['lastName'] == surname:
                 player_id = player['personId']
         if not player_id:
-            return None
-            # todo
+            raise NoDataFoundError
         player_info = self.server.get_player_stats(player_id)
-        pi = player_info['stats']['latest']
+        pi = player_info['stats'][mode]
         teams = NBATeams(self.server)
         return Player(name, surname, teams.get_team_tricode_from_id(int(player_info['teamId'])), pi['ppg'], pi['rpg'],
                       pi['apg'], pi['mpg'], pi['spg'], pi['bpg'])
@@ -42,63 +41,80 @@ class PlayersManagement(IShow):
             spg.append(float(item['SPG']))
             bpg.append(float(item['BPG']))
 
-        plt.figure(1)
-
+        fig = plt.figure(4)
+        fig.suptitle('Points per game', fontsize=14, fontweight='bold')
         y_min = 0
         y_max = max(ppg) + 10
 
         plt.ylim(y_min, y_max)
+        plt.ylabel("PPG", fontsize=14,  ha='center')
+        plt.xlabel("PLAYERS", fontsize=14,ha='center')
         for a, b in zip(names, ppg):
             plt.text(a, b, str(b), color='blue', fontweight='bold', ha='center')
         plt.bar(names, ppg)
 
-        plt.figure(2)
+        fig = plt.figure(5)
+        fig.suptitle('Assists per game', fontsize=14, fontweight='bold')
 
         y_min = 0
         y_max = max(apg) + 5
 
         plt.ylim(y_min, y_max)
+        plt.ylabel("APG", fontsize=14, ha='center')
+        plt.xlabel("PLAYERS", fontsize=14,  ha='center')
         for a, b in zip(names, apg):
             plt.text(a, b, str(b), color='blue', fontweight='bold', ha='center')
         plt.bar(names, apg)
 
-        plt.figure(3)
+        fig = plt.figure(6)
+        fig.suptitle('Rebounds per game', fontsize=14, fontweight='bold')
 
         y_min = 0
         y_max = max(rpg) + 5
 
         plt.ylim(y_min, y_max)
+        plt.ylabel("RPG", fontsize=14, ha='center')
+        plt.xlabel("PLAYERS", fontsize=14,  ha='center')
         for a, b in zip(names, rpg):
             plt.text(a, b, str(b), color='blue', fontweight='bold', ha='center')
         plt.bar(names, rpg)
 
-        plt.figure(4)
+        fig = plt.figure(7)
+        fig.suptitle('Minutes per game', fontsize=14, fontweight='bold')
 
         y_min = 0
         y_max = max(mpg) + 10
 
         plt.ylim(y_min, y_max)
+        plt.ylabel("MPG", fontsize=14,  ha='center')
+        plt.xlabel("PLAYERS", fontsize=14,  ha='center')
         for a, b in zip(names, mpg):
             plt.text(a, b, str(b), color='blue', fontweight='bold', ha='center')
         plt.bar(names, mpg)
 
-        plt.figure(5)
+        fig = plt.figure(8)
+        fig.suptitle('Steals per game', fontsize=14, fontweight='bold')
 
         y_min = 0
         y_max = max(spg) + 2
 
         plt.ylim(y_min, y_max)
+        plt.ylabel("SPG", fontsize=14, ha='center')
+        plt.xlabel("PLAYERS", fontsize=14,  ha='center')
         for a, b in zip(names, spg):
             plt.text(a, b, str(b), color='blue', fontweight='bold', ha='center')
         plt.bar(names, spg)
 
-        plt.figure(6)
+        fig = plt.figure(9)
+        fig.suptitle('Blocks per game', fontsize=14, fontweight='bold')
 
         y_min = 0
         y_max = max(bpg) + 2
 
         plt.ylim(y_min, y_max)
-        for a, b in zip(names, ppg):
+        plt.ylabel("BPG", fontsize=14,  ha='center')
+        plt.xlabel("PLAYERS", fontsize=14,  ha='center')
+        for a, b in zip(names, bpg):
             plt.text(a, b, str(b), color='blue', fontweight='bold', ha='center')
         plt.bar(names, bpg)
 

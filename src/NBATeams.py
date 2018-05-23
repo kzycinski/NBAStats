@@ -1,10 +1,3 @@
-import json
-import requests
-from pprint import pprint
-
-from ServerConnection import ServerConnection
-
-
 class NBATeams:
     def __init__(self, server):
         self.teams = server.get_teams()
