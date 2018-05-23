@@ -9,16 +9,16 @@ server = ServerConnection("http://data.nba.net/data/10s/prod/v1", date)
 
 class TestServerConnection(unittest.TestCase):
 
-    def test_empty_server_get_data(self):
+    def test_wrong_server_get_web_source(self):
         try:
-            ServerConnection.get_data("http://data.nba.net/data/10s/prod/v")
-        except NoDataFoundError:
+            ServerConnection.get_web_source("http://2017/teams.json")
+        except ConnectionError:
             pass
 
-    def test_wrong_server_get_data(self):
+    def test_empty_server_get_data(self):
         try:
-            ServerConnection.get_data("http://2017/teams.json")
-        except ConnectionError:
+            ServerConnection.get_data(ServerConnection.get_web_source("http://data.nba.net/data/10s/prod/v"))
+        except NoDataFoundError:
             pass
 
     def test_get_teams(self):

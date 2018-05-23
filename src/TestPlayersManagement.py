@@ -4,8 +4,9 @@ from ServerConnection import ServerConnection
 from NoDataFoundError import NoDataFoundError
 from PlayersManagement import PlayersManagement
 
-date = datetime.date(2017,12,12)
+date = datetime.date(2017, 12, 12)
 server = ServerConnection("http://data.nba.net/data/10s/prod/v1", date)
+
 
 class TestPlayersManagement(unittest.TestCase):
 
@@ -32,6 +33,13 @@ class TestPlayersManagement(unittest.TestCase):
 
     def test_get_player_correct_data(self):
         return self.assertIsNotNone(PlayersManagement(server).get_player("Kevin", "Durant", 'latest'))
+
+    def test_show_wrong_arg(self):
+        try:
+            PlayersManagement(server).show(None)
+        except NoDataFoundError:
+            pass
+
 
 if __name__ == '__main__':
     unittest.main()

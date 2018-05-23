@@ -25,6 +25,9 @@ class PlayersManagement(IShow):
 
     @staticmethod
     def show(players):
+        if not players:
+            raise NoDataFoundError
+
         names = []
         ppg = []
         apg = []

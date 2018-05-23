@@ -5,7 +5,7 @@ class NBATeams:
     def get_team(self, name):
         if type(name) is int:
             for item in self.teams:
-                if item['teamId'] == name:
+                if item['teamId'] == str(name):
                     return item
             else:
                 raise NameError("Wrong team ID\n")
