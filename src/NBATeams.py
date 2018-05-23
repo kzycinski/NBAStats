@@ -2,7 +2,6 @@ class NBATeams:
     def __init__(self, server):
         self.teams = server.get_teams()
 
-
     def get_team(self, name):
         if type(name) is int:
             for item in self.teams:

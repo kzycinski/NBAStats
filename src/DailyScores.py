@@ -1,5 +1,3 @@
-import threading
-
 import matplotlib.pyplot as plt
 
 from IShow import IShow

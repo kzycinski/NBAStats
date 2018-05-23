@@ -43,8 +43,8 @@ class Standings(IShow):
         fig.suptitle('Wins - {}.{}.{}'.format(self.date.day, self.date.month, self.date.year),
                      fontsize=14, fontweight='bold')
         plt.ylim(y_min, y_max)
-        plt.ylabel("WINS", fontsize = 14, ha='center')
-        plt.xlabel("TEAMS", fontsize = 14, ha='center')
+        plt.ylabel("WINS", fontsize=14, ha='center')
+        plt.xlabel("TEAMS", fontsize=14, ha='center')
         for a, b in zip(names, wins):
             plt.text(a, b, str(b), color='blue', fontweight='bold', ha='center')
         plt.bar(names, wins)
@@ -53,11 +53,10 @@ class Standings(IShow):
         fig.suptitle('Loses - {}.{}.{}'.format(self.date.day, self.date.month, self.date.year),
                      fontsize=14, fontweight='bold')
         plt.ylim(y_min, y_max)
-        plt.ylabel("LOSES", fontsize = 14, ha='center')
-        plt.xlabel("TEAMS", fontsize = 14, ha='center')
+        plt.ylabel("LOSES", fontsize=14, ha='center')
+        plt.xlabel("TEAMS", fontsize=14, ha='center')
         for a, b in zip(names, loses):
             plt.text(a, b, str(b), color='blue', fontweight='bold', ha='center')
         plt.bar(names, loses)
 
         plt.show()
-

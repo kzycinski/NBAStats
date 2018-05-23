@@ -1,7 +1,6 @@
 import datetime
 import curses
 import signal
-import threading
 
 from ServerConnection import ServerConnection
 from DailyScores import DailyScores
@@ -12,11 +11,6 @@ from Standings import Standings
 server_name = "http://data.nba.net/data/10s/prod/v1"
 today_date = datetime.date.today()
 date = None
-cursor_x = 0
-cursor_y = 0
-height, width = 0, 0
-t1 = None
-t2 = None
 
 
 def print_title(start_y, start_x, title):
@@ -78,7 +72,7 @@ def print_info():
     stdscr.getch()
 
 
-def signal_handler(signal, frame):
+def signal_handler():
     stdscr.clear()
     stdscr.refresh()
     exit(0)
@@ -101,6 +95,7 @@ def game_scores():
 
 
 def standings():
+    global standings_buff
     if date is None:
         set_data()
     while True:
@@ -166,6 +161,7 @@ def standings():
 
 
 def compare_players():
+    global mode
     if date is None:
         set_data()
 
@@ -263,7 +259,7 @@ def compare_players():
             players_mgmt = PlayersManagement(server)
             player_1 = players_mgmt.get_player(name_1, surname_1, mode).get_stats()
             player_2 = players_mgmt.get_player(name_2, surname_2, mode).get_stats()
-            players_mgmt.show(player_1 + player_2)
+            PlayersManagement.show(player_1 + player_2)
             break
         except NoDataFoundError:
             msg = "No scores information on name and data, please change data and try again."
@@ -436,7 +432,6 @@ def main():
     global stdscr
 
     stdscr = curses.initscr()
-    height, width = stdscr.getmaxyx()
 
     curses.start_color()
     curses.init_pair(2, curses.COLOR_CYAN, curses.COLOR_BLACK)

@@ -3,7 +3,7 @@ import requests
 from NoDataFoundError import NoDataFoundError
 
 
-class ServerConnection():
+class ServerConnection:
     def __init__(self, server_name, date):
         self.server_name = server_name
         self.date = date
@@ -69,6 +69,10 @@ class ServerConnection():
             raise NoDataFoundError
 
     def get_eastern_standings(self):
+        """
+
+        :rtype: object
+        """
         try:
             tmp = self.get_conference_standings()
             return tmp['league']['standard']['conference']['east']
@@ -88,9 +92,10 @@ class ServerConnection():
         except json.decoder.JSONDecodeError:
             raise NoDataFoundError
 
-    def get_player_stats(self, id):
+    def get_player_stats(self, player_id):
         try:
-            web_source = requests.get(self.server_name + "/{}/players/{}_profile.json".format(self.date.year, id))
+            web_source = requests.get(
+                self.server_name + "/{}/players/{}_profile.json".format(self.date.year, player_id))
         except requests.exceptions.ConnectionError:
             raise ConnectionError
         try:

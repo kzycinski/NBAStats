@@ -23,7 +23,8 @@ class PlayersManagement(IShow):
         return Player(name, surname, teams.get_team_tricode_from_id(int(player_info['teamId'])), pi['ppg'], pi['rpg'],
                       pi['apg'], pi['mpg'], pi['spg'], pi['bpg'])
 
-    def show(self, players):
+    @staticmethod
+    def show(players):
         names = []
         ppg = []
         apg = []
@@ -47,8 +48,8 @@ class PlayersManagement(IShow):
         y_max = max(ppg) + 10
 
         plt.ylim(y_min, y_max)
-        plt.ylabel("PPG", fontsize=14,  ha='center')
-        plt.xlabel("PLAYERS", fontsize=14,ha='center')
+        plt.ylabel("PPG", fontsize=14, ha='center')
+        plt.xlabel("PLAYERS", fontsize=14, ha='center')
         for a, b in zip(names, ppg):
             plt.text(a, b, str(b), color='blue', fontweight='bold', ha='center')
         plt.bar(names, ppg)
@@ -61,7 +62,7 @@ class PlayersManagement(IShow):
 
         plt.ylim(y_min, y_max)
         plt.ylabel("APG", fontsize=14, ha='center')
-        plt.xlabel("PLAYERS", fontsize=14,  ha='center')
+        plt.xlabel("PLAYERS", fontsize=14, ha='center')
         for a, b in zip(names, apg):
             plt.text(a, b, str(b), color='blue', fontweight='bold', ha='center')
         plt.bar(names, apg)
@@ -74,7 +75,7 @@ class PlayersManagement(IShow):
 
         plt.ylim(y_min, y_max)
         plt.ylabel("RPG", fontsize=14, ha='center')
-        plt.xlabel("PLAYERS", fontsize=14,  ha='center')
+        plt.xlabel("PLAYERS", fontsize=14, ha='center')
         for a, b in zip(names, rpg):
             plt.text(a, b, str(b), color='blue', fontweight='bold', ha='center')
         plt.bar(names, rpg)
@@ -86,8 +87,8 @@ class PlayersManagement(IShow):
         y_max = max(mpg) + 10
 
         plt.ylim(y_min, y_max)
-        plt.ylabel("MPG", fontsize=14,  ha='center')
-        plt.xlabel("PLAYERS", fontsize=14,  ha='center')
+        plt.ylabel("MPG", fontsize=14, ha='center')
+        plt.xlabel("PLAYERS", fontsize=14, ha='center')
         for a, b in zip(names, mpg):
             plt.text(a, b, str(b), color='blue', fontweight='bold', ha='center')
         plt.bar(names, mpg)
@@ -100,7 +101,7 @@ class PlayersManagement(IShow):
 
         plt.ylim(y_min, y_max)
         plt.ylabel("SPG", fontsize=14, ha='center')
-        plt.xlabel("PLAYERS", fontsize=14,  ha='center')
+        plt.xlabel("PLAYERS", fontsize=14, ha='center')
         for a, b in zip(names, spg):
             plt.text(a, b, str(b), color='blue', fontweight='bold', ha='center')
         plt.bar(names, spg)
@@ -112,8 +113,8 @@ class PlayersManagement(IShow):
         y_max = max(bpg) + 2
 
         plt.ylim(y_min, y_max)
-        plt.ylabel("BPG", fontsize=14,  ha='center')
-        plt.xlabel("PLAYERS", fontsize=14,  ha='center')
+        plt.ylabel("BPG", fontsize=14, ha='center')
+        plt.xlabel("PLAYERS", fontsize=14, ha='center')
         for a, b in zip(names, bpg):
             plt.text(a, b, str(b), color='blue', fontweight='bold', ha='center')
         plt.bar(names, bpg)
