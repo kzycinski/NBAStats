@@ -17,6 +17,8 @@ class Player:
                       ('BPG', self.bpg)])]
 
     def get_name(self):
+        if not self.first_name or not self.last_name:
+            raise TypeError("Players' name is null")
         return self.first_name + " " + self.last_name
 
     def get_team(self):

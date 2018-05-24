@@ -4,6 +4,7 @@ from ServerConnection import ServerConnection
 from NoDataFoundError import NoDataFoundError
 from PlayersManagement import PlayersManagement
 
+
 date = datetime.date(2017, 12, 12)
 server = ServerConnection("http://data.nba.net/data/10s/prod/v1", date)
 

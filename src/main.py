@@ -82,7 +82,7 @@ def game_scores():
     if date is None:
         set_data()
     try:
-        daily_scores = DailyScores(server)
+        daily_scores = DailyScores(server.get_daily_scores(), server.get_date())
         daily_scores.show(daily_scores.get_scores())
     except NoDataFoundError:
         msg = "No scores information on given date, change date and try again"
@@ -90,6 +90,14 @@ def game_scores():
         stdscr.getch()
     except ConnectionError:
         msg = "Cannot connect to the server"
+        print_middle(msg)
+        stdscr.getch()
+    except TypeError:
+        msg = "Could not load data, please check your inputs and try again"
+        print_middle(msg)
+        stdscr.getch()
+    except AttributeError:
+        msg = "Change date and try again"
         print_middle(msg)
         stdscr.getch()
 
@@ -155,6 +163,10 @@ def standings():
             stdscr.getch()
         except ConnectionError:
             msg = "Cannot connect to the server"
+            print_middle(msg)
+            stdscr.getch()
+        except TypeError as err:
+            msg = 'Type error {}'.format(err)
             print_middle(msg)
             stdscr.getch()
         return

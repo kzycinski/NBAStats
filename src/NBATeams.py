@@ -22,10 +22,10 @@ class NBATeams:
             else:
                 raise NameError("Wrong team FullName\n")
 
-    def get_team_tricode_from_id(self, id):
-        if type(id) is int:
+    def get_team_tricode_from_id(self, team_id):
+        if type(team_id) is int:
             for item in self.teams:
-                if int(item['teamId']) == id:
+                if int(item['teamId']) == team_id:
                     return item['tricode']
             else:
                 raise NameError("Wrong team ID\n")

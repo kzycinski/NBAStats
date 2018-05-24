@@ -9,6 +9,8 @@ class Standings(IShow):
         self.date = server.get_date()
 
     def get_standings(self, standings):
+        if not standings:
+            raise TypeError("Wrong argument in get_standings method")
         result = []
         teams = NBATeams(self.server)
         for item in standings:
@@ -27,6 +29,8 @@ class Standings(IShow):
         return self.get_standings(self.server.get_western_standings())
 
     def show(self, standings):
+        if not standings:
+            raise TypeError("Wrong argument in get_standings method")
         names = []
         wins = []
         loses = []

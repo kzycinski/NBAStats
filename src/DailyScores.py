@@ -4,19 +4,24 @@ from IShow import IShow
 
 
 class DailyScores(IShow):
-    def __init__(self, server):
-        self.games = server.get_daily_scores()
-        self.date = server.get_date()
+    def __init__(self, games, date):
+        self.games = games
+        self.date = date
 
     def get_scores(self):
         result = []
         for item in self.games:
-            tmp = dict([('hTeamTriCode', item['hTeam']['triCode']), ('hTeamScore', item['hTeam']['score']),
-                        ('vTeamTriCode', item['vTeam']['triCode']), ('vTeamScore', item['vTeam']['score'])])
-            result.append(tmp)
+            try:
+                tmp = dict([('hTeamTriCode', item['hTeam']['triCode']), ('hTeamScore', item['hTeam']['score']),
+                            ('vTeamTriCode', item['vTeam']['triCode']), ('vTeamScore', item['vTeam']['score'])])
+                result.append(tmp)
+            except TypeError:
+                return None
         return result
 
     def show(self, scores):
+        if scores is None:
+            raise TypeError
         names = []
         points = []
         for item in scores:

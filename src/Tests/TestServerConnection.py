@@ -48,6 +48,10 @@ class TestServerConnection(unittest.TestCase):
         except NoDataFoundError:
             pass
 
+    def test_get_date(self):
+        if server.get_date() == date:
+            pass
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -7,6 +7,7 @@ from NBATeams import NBATeams
 date = datetime.date(2017, 12, 12)
 server = ServerConnection("http://data.nba.net/data/10s/prod/v1", date)
 
+
 class TestNBATeams(unittest.TestCase):
 
     def test_init_correct_server(self):
@@ -57,4 +58,4 @@ class TestNBATeams(unittest.TestCase):
 
 
 if __name__ == '__main__':
-        unittest.main()
+    unittest.main()
