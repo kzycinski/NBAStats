@@ -5,6 +5,9 @@ from NoDataFoundError import NoDataFoundError
 
 date = datetime.date(2017, 12, 12)
 server = ServerConnection("http://data.nba.net/data/10s/prod/v1", date)
+empty_string = " "
+wrong_format_string = "{}}{\"d"
+correct_fromat_string = b'{"_internal":{"pubDateTime":"2018-05-30 01:52:20.817"}}'
 
 
 class TestServerConnection(unittest.TestCase):
@@ -20,6 +23,21 @@ class TestServerConnection(unittest.TestCase):
             ServerConnection.get_data(ServerConnection.get_web_source("http://data.nba.net/data/10s/prod/v"))
         except NoDataFoundError:
             pass
+
+    def test_get_data_from_empty_string(self):
+        try:
+            server.get_data(empty_string)
+        except NoDataFoundError:
+            pass
+
+    def test_get_data_from_wrong_strong(self):
+        try:
+            server.get_data(wrong_format_string)
+        except NoDataFoundError:
+            pass
+
+    def test_get_data_from_correct_string(self):
+        return self.assertIsNotNone(server.get_data(correct_fromat_string))
 
     def test_get_teams(self):
         return self.assertIsNotNone(server.get_teams())

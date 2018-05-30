@@ -1,4 +1,7 @@
+import datetime
 import json
+from pprint import pprint
+
 import requests
 from NoDataFoundError import NoDataFoundError
 
@@ -20,14 +23,14 @@ class ServerConnection:
     @staticmethod
     def get_web_source(link):
         try:
-            return requests.get(link)
+            return requests.get(link).content
         except requests.exceptions.ConnectionError:
             raise ConnectionError
 
     @staticmethod
     def get_data(web_source):
         try:
-            data = json.loads(web_source.content)
+            data = json.loads(web_source)
             return data
         except json.decoder.JSONDecodeError:
             raise NoDataFoundError
@@ -65,3 +68,10 @@ class ServerConnection:
 
     def get_date(self):
         return self.date
+
+
+server_name = "http://data.nba.net/data/10s/prod/v1"
+date = datetime.date(2017, 12, 12)
+serv = ServerConnection(server_name, date)
+print(serv.get_web_source(serv.server_name + serv.teams_link))
+#print(serv.get_data(serv.get_web_source(serv.server_name + serv.teams_link)))
